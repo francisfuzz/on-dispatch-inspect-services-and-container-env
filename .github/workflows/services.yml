@@ -23,10 +23,10 @@ jobs:
           curl localhost:${{ job.services.nginx.ports['80'] }} || exit 1
   two:
     needs: one
-    runs-on:
-      pool: default
+    runs-on: ubuntu-latest
     services:
-      nginx: nginx
+      nginx: 
+        image: nginx
     steps:
       - name: Dump job context
         env:
