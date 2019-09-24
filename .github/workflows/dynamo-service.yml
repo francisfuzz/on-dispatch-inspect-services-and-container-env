@@ -1,0 +1,23 @@
+name: DynamoService
+
+on: repository_dispatch
+  
+jobs:
+  one:
+    runs-on: ubuntu-latest
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local
+        ports:
+        - 8000:8000
+    steps:
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: |
+          echo "$JOB_CONTEXT"
+      - name: Check service endpoint
+        run: |
+          curl 0.0.0.0:${{ job.services.dynamodb.ports['8000'] }} || exit 1
+          echo "----------------------------------------"
+          curl localhost:${{ job.services.dynamodb.ports['8000'] }} || exit 1
