@@ -26,6 +26,6 @@ jobs:
           # Dump the last running container
           docker inspect container $(docker ps -l -q)
           echo "----------------------------------------"
-          curl localhost:${{ job.services.dynamodb.ports['8000'] }} || exit 1
+          curl localhost:8000 || exit 1
           echo "----------------------------------------"
-          curl 0.0.0.0:${{ job.services.dynamodb.ports['8000'] }} || exit 1
+          curl 0.0.0.0:8000 || exit 1
