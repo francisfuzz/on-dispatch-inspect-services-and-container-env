@@ -1,0 +1,41 @@
+name: Container
+
+on: repository_dispatch
+
+jobs:
+  one:
+    runs-on:
+      pool: default
+    container: 
+      image: ubuntu:16.04
+    timeout-minutes: 1
+    steps:
+      - name: Check env
+        run: |
+          printenv | sort
+          echo "RUNNER_TOOL_CACHE=$RUNNER_TOOL_CACHE"
+          if [ "$RUNNER_TOOL_CACHE" != "/__w/_tool" ]; then
+            echo Expected RUNNER_TOOL_CACHE to be "/__w/_tool"
+            exit 1
+          fi
+  two:
+    needs: one
+    runs-on:
+      pool: default
+    container:
+      image: ubuntu:16.04
+      env:
+        SOME_EXTRA_ENV_KEY: some extra env value
+    timeout-minutes: 1
+    steps:
+      - name: Check env
+        run: |
+          printenv | sort
+          if [ "$RUNNER_TOOL_CACHE" != "/__w/_tool" ]; then
+            echo Expected RUNNER_TOOL_CACHE to be "/__w/_tool"
+            exit 1
+          fi
+          if [ "$SOME_EXTRA_ENV_KEY" != "some extra env value" ]; then
+            echo Expected SOME_EXTRA_ENV_KEY to be "some extra env value"
+            exit 1
+          fi
