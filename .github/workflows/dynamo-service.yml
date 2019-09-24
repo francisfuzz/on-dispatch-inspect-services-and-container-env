@@ -10,6 +10,8 @@ jobs:
         image: amazon/dynamodb-local
         ports:
         - 8000:8000
+    strategy:
+      fail-fast: false
     steps:
       - name: Dump job context
         env:
@@ -18,6 +20,6 @@ jobs:
           echo "$JOB_CONTEXT"
       - name: Check service endpoint
         run: |
-          curl 0.0.0.0:${{ job.services.dynamodb.ports['8000'] }} || exit 1
-          echo "----------------------------------------"
           curl localhost:${{ job.services.dynamodb.ports['8000'] }} || exit 1
+          echo "----------------------------------------"
+          curl 0.0.0.0:${{ job.services.dynamodb.ports['8000'] }} || exit 1
