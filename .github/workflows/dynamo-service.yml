@@ -20,7 +20,11 @@ jobs:
           echo "$JOB_CONTEXT"
       - name: Check service endpoint
         run: |
+          # Show all running docker processes
           docker ps
+          echo "----------------------------------------"
+          # Dump the last running container
+          docker inspect container $(docker ps -l -q)
           echo "----------------------------------------"
           curl localhost:${{ job.services.dynamodb.ports['8000'] }} || exit 1
           echo "----------------------------------------"
